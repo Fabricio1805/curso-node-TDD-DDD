@@ -1,9 +1,13 @@
 {
-  "name": "curso-node-TDD",
+  "name": "curso_node_TDD",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "git-commit-msg-linter": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "typescript": "^5.1.6"
   }
 }
