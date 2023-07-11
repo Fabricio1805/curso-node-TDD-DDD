@@ -7,7 +7,7 @@ describe('SigUp Controller', () => {
       body: {
         email: 'johnDoe@test.com',
         password: '1234',
-        PasswordConfirmation: '1234'
+        passwordConfirmation: '1234'
       }
     };
     const httpResponse = sut.handle(httpRequest);
@@ -22,7 +22,7 @@ describe('SigUp Controller', () => {
       body: {
         name: 'johnDoe',
         password: '1234',
-        PasswordConfirmation: '1234',
+        passwordConfirmation: '1234',
       }
     };
     const httpResponse = sut.handle(httpRequest);
