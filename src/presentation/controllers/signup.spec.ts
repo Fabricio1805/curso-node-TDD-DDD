@@ -99,4 +99,20 @@ describe('SigUp Controller', () => {
     );
   });
 
+  test('Should call EmailValidator with correct email', () => {
+    const { sut, emailValidatorStub } = makeSut();
+
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
+    
+    const httpRequest = {
+      body: {
+        name: 'johnDoe',
+        email: 'johnDoe@test.com',
+        password: '1234',
+        passwordConfirmation: '1234',
+      },
+    };
+    sut.handle(httpRequest);
+    expect(isValidSpy).toHaveBeenCalledWith('johnDoe@test.com');
+  });
 });
