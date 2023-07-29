@@ -22,14 +22,14 @@ const makeEmailValidator = (): IEmailValidator => {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    add (account: AddAccountModel): AccountModel {
+    async add (account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = {
         id: '756f632a-e1ba-4091-910a-fc7d59eb483f',
         name: 'johnDoe',
         email: 'johnDoe@test.com',
         password: '1234',
       };
-      return fakeAccount;
+      return new Promise(resolve => resolve(fakeAccount));
     }
   }
   return new AddAccountStub();
@@ -53,7 +53,7 @@ const makeSut = (): ISutTypes => {
   };
 };
 describe('SigUp Controller', () => {
-  test('Should return 400 if no name is provided', () => {
+  test('Should return 400 if no name is provided', async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -62,12 +62,12 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234'
       }
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamError('name'));
   });
   
-  test('Should return 400 if no email is provided', () => {
+  test('Should return 400 if no email is provided', async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -76,12 +76,12 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234',
       }
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamError('email'));
   });
   
-  test('Should return 400 if no password is provided', () => {
+  test('Should return 400 if no password is provided', async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -90,12 +90,12 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamError('password'));
   });
 
-  test('Should return 400 if no password confirmation is provided', () => {
+  test('Should return 400 if no password confirmation is provided', async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -104,14 +104,14 @@ describe('SigUp Controller', () => {
         password: '1234',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
       new MissingParamError('passwordConfirmation')
     );
   });
 
-  test('Should return 400 if password confirmation fails', () => {
+  test('Should return 400 if password confirmation fails', async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -121,14 +121,14 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '12245',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
       new InvalidParamError('passwordConfirmation')
     );
   });
 
-  test('Should return 400 if an invalid email is provided', () => {
+  test('Should return 400 if an invalid email is provided', async () => {
     const { sut, emailValidatorStub } = makeSut();
 
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
@@ -140,7 +140,7 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
       new InvalidParamError('email')
@@ -164,7 +164,7 @@ describe('SigUp Controller', () => {
     expect(isValidSpy).toHaveBeenCalledWith('johnDoe@test.com');
   });
 
-  test('Should return 500 if EmailValidator throws', () => {
+  test('Should return 500 if EmailValidator throws', async () => {
     
     const { sut, emailValidatorStub } = makeSut();
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
@@ -178,12 +178,12 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
   });
 
-  test('Should return 500 if AddAccount throws', () => {
+  test('Should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut();
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
       throw new Error();
@@ -196,7 +196,7 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
   });
@@ -222,7 +222,7 @@ describe('SigUp Controller', () => {
     });
   });
 
-  test('Should return 201 if valid data is provided', () => {
+  test('Should return 201 if valid data is provided', async () => {
     const { sut } = makeSut();
 
     const httpRequest = {
@@ -233,7 +233,7 @@ describe('SigUp Controller', () => {
         passwordConfirmation: '1234',
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(201);
     expect(httpResponse.body).toEqual({
       id: '756f632a-e1ba-4091-910a-fc7d59eb483f',
