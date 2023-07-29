@@ -24,10 +24,10 @@ const makeAddAccount = (): AddAccount => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     add (account: AddAccountModel): AccountModel {
       const fakeAccount = {
-        id: 'valid_id',
-        name: 'valid_name',
-        email: 'valid_email@mail.com',
-        password: 'valid_password'
+        id: '756f632a-e1ba-4091-910a-fc7d59eb483f',
+        name: 'johnDoe',
+        email: 'johnDoe@test.com',
+        password: '1234',
       };
       return fakeAccount;
     }
@@ -216,6 +216,27 @@ describe('SigUp Controller', () => {
     };
     sut.handle(httpRequest);
     expect(addSpy).toHaveBeenCalledWith({
+      name: 'johnDoe',
+      email: 'johnDoe@test.com',
+      password: '1234',
+    });
+  });
+
+  test('Should return 201 if valid data is provided', () => {
+    const { sut } = makeSut();
+
+    const httpRequest = {
+      body: {
+        name: 'johnDoe',
+        email: 'johnDoe@test.com',
+        password: '1234',
+        passwordConfirmation: '1234',
+      },
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(201);
+    expect(httpResponse.body).toEqual({
+      id: '756f632a-e1ba-4091-910a-fc7d59eb483f',
       name: 'johnDoe',
       email: 'johnDoe@test.com',
       password: '1234',
