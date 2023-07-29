@@ -14,3 +14,11 @@ export const serverError = (): IHttpResponse => {
     body: new ServerError()
   };
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const created = (data: any): IHttpResponse => { 
+  return {
+    statusCode: 201,
+    body: data
+  };
+};
