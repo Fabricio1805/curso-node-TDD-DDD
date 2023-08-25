@@ -8,7 +8,7 @@ describe('Content Type Middleware', () => {
     });
     const response = await request(app)
       .get('/test_content_type_json');
-    
+
     expect(response.status).toBe(200);
     expect(response.headers['content-type']).toMatch(/json/);
   });
