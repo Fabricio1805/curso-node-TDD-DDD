@@ -6,6 +6,7 @@ const config = {
   transform: {
     ".+\\.ts$": "ts-jest",
   },
+  preset: "@shelf/jest-mongodb",
 };
 
 module.exports = config;
