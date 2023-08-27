@@ -1,7 +1,6 @@
-import { Request, Response, Router } from 'express';
+import { Router } from 'express';
+import { makeSignUpController } from '../factories/signup';
 
 export default (router: Router): void => {
-  router.post('/signup', (req: Request, res: Response) => { 
-    res.json({message: 'funcionouuu'});
-  });
+  router.post('/signup', makeSignUpController().handle);
 };
