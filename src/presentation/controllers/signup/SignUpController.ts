@@ -40,7 +40,6 @@ export class SignUpController implements IController {
       if (!isValidEmail) {
         return badRequest(new InvalidParamError('email'));
       }
-
       const account = await this.addAccount.add({
         name,
         email,
