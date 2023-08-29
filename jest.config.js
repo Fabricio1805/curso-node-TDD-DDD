@@ -1,6 +1,6 @@
 const config = {
   coverageDirectory: "coverage",
-  collectCoverageFrom: ["<rootDir>/src/**/*.ts"],
+  collectCoverageFrom: ["<rootDir>/src/**/*.ts", "!<rootDir>/src/main/**"],
   roots: ["<rootDir>/src"],
   testEnvironment: "node",
   transform: {
