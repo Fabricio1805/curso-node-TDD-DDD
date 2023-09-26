@@ -28,3 +28,11 @@ export const unauthorized = (): IHttpResponse => ({
   statusCode: 401,
   body: new UnauthorizedError()
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const ok = (data: any): IHttpResponse => {
+  return {
+    statusCode: 200,
+    body: data,
+  };
+};
