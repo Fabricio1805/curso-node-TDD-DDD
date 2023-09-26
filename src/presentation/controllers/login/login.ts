@@ -1,8 +1,12 @@
-import { IAuthentication } from '../../../domain/usecases/authentication';
+import {
+  IController,
+  IHttpRequest,
+  IHttpResponse,
+  IAuthentication,
+  IEmailValidator,
+} from './login-protocols';
 import { InvalidParamError, MissingParamError } from '../../errors';
 import { badRequest, serverError, unauthorized } from '../../helpers/http-helper';
-import { IController, IHttpRequest, IHttpResponse } from '../../protocols';
-import { IEmailValidator } from '../signup/signup-protocols';
 
 export class LoginController implements IController {
   constructor(private readonly emailValidator: IEmailValidator, private readonly authentication: IAuthentication ) { }
