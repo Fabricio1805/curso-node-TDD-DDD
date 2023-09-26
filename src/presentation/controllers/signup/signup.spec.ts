@@ -5,6 +5,7 @@ import {
   IEmailValidator,
   AccountModel,
   IHttpRequest,
+  Validation,
 } from './signup-protocols';
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors';
 import { created,badRequest, serverError } from '../../helpers/http-helper';
@@ -37,6 +38,17 @@ const makeFakeAccount = (): AccountModel => ({
   password: '1234',
 });
 
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    validate(input: any): Error {
+      return null;
+    }
+  }
+  return new ValidationStub();
+};
+
+
 const makeFakeRequest = (): IHttpRequest => ({
   body: {
     name: 'johnDoe',
@@ -48,17 +60,24 @@ const makeFakeRequest = (): IHttpRequest => ({
 interface ISutTypes {
   sut: SignUpController;
   emailValidatorStub: IEmailValidator;
-  addAccountStub: AddAccount
+  addAccountStub: AddAccount;
+  validationStub: Validation;
 }
 
 const makeSut = (): ISutTypes => {
   const emailValidatorStub = makeEmailValidator();
   const addAccountStub = makeAddAccount();
-  const sut = new SignUpController(emailValidatorStub, addAccountStub);
+  const validationStub = makeValidation();
+  const sut = new SignUpController(
+    emailValidatorStub,
+    addAccountStub,
+    validationStub
+  );
   return {
     sut,
     emailValidatorStub,
     addAccountStub,
+    validationStub,
   };
 };
 describe('SigUp Controller', () => {
@@ -193,4 +212,14 @@ describe('SigUp Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(created(makeFakeAccount()));
   });
+
+  test('Should call Validation with correct values', () => {
+    const { sut, validationStub } = makeSut();
+
+    const validateSpy = jest.spyOn(validationStub, 'validate');
+    const httpRequest = makeFakeRequest();
+    sut.handle(httpRequest);
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
+  });
+
 });
