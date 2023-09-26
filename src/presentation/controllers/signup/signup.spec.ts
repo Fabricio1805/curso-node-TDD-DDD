@@ -81,61 +81,6 @@ const makeSut = (): ISutTypes => {
   };
 };
 describe('SigUp Controller', () => {
-  test('Should return 400 if no name is provided', async () => {
-    const { sut } = makeSut();
-    const httpRequest = {
-      body: {
-        email: 'johnDoe@test.com',
-        password: '1234',
-        passwordConfirmation: '1234'
-      }
-    };
-    const httpResponse = await sut.handle(httpRequest);
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')));
-  });
-  
-  test('Should return 400 if no email is provided', async () => {
-    const { sut } = makeSut();
-    const httpRequest = {
-      body: {
-        name: 'johnDoe',
-        password: '1234',
-        passwordConfirmation: '1234',
-      }
-    };
-    const httpResponse = await sut.handle(httpRequest);
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')));
-  });
-  
-  test('Should return 400 if no password is provided', async () => {
-    const { sut } = makeSut();
-    const httpRequest = {
-      body: {
-        name: 'johnDoe',
-        email: 'johnDoe@test.com',
-        passwordConfirmation: '1234',
-      },
-    };
-    const httpResponse = await sut.handle(httpRequest);
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')));
-  });
-
-  test('Should return 400 if no password confirmation is provided', async () => {
-    const { sut } = makeSut();
-    const httpRequest = {
-      body: {
-        name: 'johnDoe',
-        email: 'johnDoe@test.com',
-        password: '1234',
-      },
-    };
-    const httpResponse = await sut.handle(httpRequest);
-  
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('passwordConfirmation')));
-  });
-
   test('Should return 400 if password confirmation fails', async () => {
     const { sut } = makeSut();
     const httpRequest = {
