@@ -1,3 +1,4 @@
+import { UnauthorizedError } from '../errors';
 import { ServerError } from '../errors/server-error';
 import { IHttpResponse } from '../protocols/http';
 
@@ -22,3 +23,8 @@ export const created = (data: any): IHttpResponse => {
     body: data
   };
 };
+
+export const unauthorized = (): IHttpResponse => ({
+  statusCode: 401,
+  body: new UnauthorizedError()
+});
